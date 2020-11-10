@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    def git_auth = "497572cf-6ad9-45d9-9b5c-bf1021753532"
+    def branch = "main"
+
+    stages {
+        stage('拉取代码') {
+            steps {
+                git branch: '${branch}', credentialsId: '${git_auth}', url: 'https://github.com/18515291426/demo.git'
+            }
+        }
+
+        stage('编译构建') {
+            steps {
+                sh 'mvn clean package -Dmaven.test.skip=true'
+            }
+        }
+
+        stage('构建docker镜像推送至Harbor') {
+            steps {
+                echo '构建docker镜像推送至Harbor'
+            }
+        }
+
+        stage('项目部署') {
+            steps {
+                echo '项目部署'
+            }
+        }
+    }
+}
